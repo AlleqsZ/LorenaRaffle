@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const prizeSchema = new mongoose.Schema({
   title: {
@@ -19,10 +19,10 @@ const prizeSchema = new mongoose.Schema({
   },
   winnerTicketNumber: {
     type: Number,
-    default: null // pentru câștigător (dacă îl alegi tu)
+    default: null // câștigătorul va fi setat aici
   }
 }, {
   timestamps: true
-})
+});
 
-export default mongoose.model('Prize', prizeSchema)
+export default mongoose.model('Prize', prizeSchema);
