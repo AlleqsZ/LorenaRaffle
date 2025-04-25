@@ -24,7 +24,7 @@ router.post('/buy/:raffleId', protect, async (req, res) => {
 
     const newTicket = await Ticket.create({
       user: userId,
-      prize: raffleId,
+      raffle: raffleId,
       number: ticketNumber
     });
 
@@ -37,10 +37,10 @@ router.post('/buy/:raffleId', protect, async (req, res) => {
   }
 });
 
-// Afișează bilete pentru un premiu
-router.get('/prize/:prizeId', async (req, res) => {
+// Afișează bilete pentru o tombolă
+router.get('/raffle/:raffleId', async (req, res) => {
   try {
-    const tickets = await Ticket.find({ prize: req.params.prizeId }).populate('user', 'email');
+    const tickets = await Ticket.find({ raffle: req.params.raffleId }).populate('user', 'email');
     res.json(tickets);
   } catch (err) {
     res.status(500).json({ error: err.message });
