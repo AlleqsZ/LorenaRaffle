@@ -6,9 +6,9 @@ const ticketSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  prize: {
+  raffle: {  // Schimbă `prize` în `raffle`
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Prize',
+    ref: 'Raffle',
     required: true
   },
   number: {
