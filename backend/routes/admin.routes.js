@@ -1,7 +1,7 @@
 import express from 'express'
 import Ticket from '../models/Ticket.js'
 import Raffle from '../models/Raffle.js'
-import { protect, adminOnly } from '../middleware/auth.js' // <- importă middleware-urile
+import { protect, adminOnly } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -10,19 +10,22 @@ router.post('/draw/:raffleId', protect, adminOnly, async (req, res) => {
   try {
     const { raffleId } = req.params
 
-    const tickets = await Ticket.find({ raffle: raffleId })
-    if (tickets.length === 0) {
-      return res.status(400).json({ message: 'Nu există bilete pentru această tombolă' })
+    const raffle = await Raffle.findById(raffleId)
+    if (!raffle || !raffle.isActive) {
+      return res.status(400).json({ message: 'Tombola este inactivă sau nu există.' })
     }
 
-    // Selectăm câștigătorul aleatoriu
-    const winnerTicket = tickets[Math.floor(Math.random() * tickets.length)]
+    const tickets = await Ticket.find({ prize: raffleId })
+    if (tickets.length === 0) {
+      return res.status(400).json({ message: 'Nu există bilete pentru această tombolă.' })
+    }
 
+    const winnerTicket = tickets[Math.floor(Math.random() * tickets.length)]
     winnerTicket.isWinner = true
     await winnerTicket.save()
 
-    // Dezactivăm tombolă
-    await Raffle.findByIdAndUpdate(raffleId, { isActive: false })
+    raffle.isActive = false
+    await raffle.save()
 
     res.json({
       message: 'Câștigător extras cu succes!',
