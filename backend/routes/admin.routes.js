@@ -1,11 +1,12 @@
 import express from 'express'
 import Ticket from '../models/Ticket.js'
 import Raffle from '../models/Raffle.js'
+import { protect, adminOnly } from '../middleware/auth.js' // <- importă middleware-urile
 
 const router = express.Router()
 
-// Extragere câștigător pentru o tombolă
-router.post('/draw/:raffleId', async (req, res) => {
+// Extragere câștigător pentru o tombolă (doar admin)
+router.post('/draw/:raffleId', protect, adminOnly, async (req, res) => {
   try {
     const { raffleId } = req.params
 
